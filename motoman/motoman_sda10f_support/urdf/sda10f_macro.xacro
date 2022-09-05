@@ -1,0 +1,140 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!--Aditional lines>
+  <xacro:arg name="x" default="0.14"/>
+  <xacro:arg name="y" default="0.0"/>
+  <xacro:arg name="z" default="0.115"/>
+  <xacro:arg name="X" default="0.0"/>
+  <xacro:arg name="Y" default="0.0"/>
+  <xacro:arg name="Z" default="0.0"/>
+  < End of additional lines-->
+
+  <xacro:include filename="$(find motoman_sda10f_support)/urdf/common_torso_macro.xacro" />
+  <xacro:include filename="$(find motoman_sda10f_support)/urdf/arm_macro.xacro" />
+  <xacro:include filename="$(find wsg_50_simulation)/urdf/wsg_50.urdf.xacro"/>
+
+  <xacro:macro name="motoman_sda10f" params="prefix">
+    <xacro:torso name="${prefix}torso" prefix="${prefix}torso_"/>
+
+    <xacro:motoman_arm name="${prefix}arm_left" prefix="${prefix}arm_left_" parent="${prefix}torso_link_b1" reflect="1">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:motoman_arm>
+
+    <xacro:motoman_arm name="${prefix}arm_right" prefix="${prefix}arm_right_" parent="${prefix}torso_link_b1" reflect="-1">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:motoman_arm>
+
+    <!-- LEFT GRIPPER -->
+	<joint name="left_tool_exchanger_joint" type="fixed">
+		<parent link="${prefix}arm_left_link_tool0"/>
+		<child link="left_tool_exchanger"/>
+		<origin xyz="0 0 0.060" rpy="0 0 -0.7854"/>
+	</joint>
+
+	<link name="left_tool_exchanger">
+		<visual>
+			<origin xyz="0 0 -0.030" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.040" length="0.060"/>
+			</geometry>
+			<material name="Black">
+				<color rgba="0.0 0.0 0.0 1.0"/>
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 -0.030" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.040" length="0.060"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<xacro:wsg_50_xacro name="left_wsg_50" parent="left_tool_exchanger" finger_length="0" finger_tip="0">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+	</xacro:wsg_50_xacro>
+
+	<!-- RIGHT GRIPPER -->
+	<joint name="right_tool_exchanger_joint" type="fixed">
+		<parent link="${prefix}arm_right_link_tool0"/>
+		<child link="right_tool_exchanger"/>
+		<origin xyz="0 0 0.160" rpy="0 0 -0.7854"/>
+	</joint>
+
+	<link name="right_tool_exchanger"> <!-- ATC -->
+		<visual>
+			<origin xyz="0 0 -0.080" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.040" length="0.160"/>
+			</geometry>
+			<material name="Black">
+				<color rgba="0.0 0.0 0.0 1.0"/>
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 -0.080" rpy="0 0 0"/>
+			<geometry>
+				<cylinder radius="0.040" length="0.160"/>
+			</geometry>
+		</collision>
+	</link>
+
+	<xacro:wsg_50_xacro name="right_wsg_50" parent="right_tool_exchanger" finger_length="0" finger_tip="0">
+		<origin xyz="0 0 0" rpy="-3.14 3.14 0"/>
+	</xacro:wsg_50_xacro>
+
+
+    <!-- link list -->
+    <link name="${prefix}base_link" />
+
+    <!-- joint list -->
+    <joint name="${prefix}base_link_torso" type="fixed">
+      <parent link="${prefix}base_link"/>
+      <child link="${prefix}torso_base_link"/>
+      <origin xyz="0 0 1.2" rpy="0 0 0"/>
+    </joint>
+
+    <!--Aditional lines2-->
+    <link name="cell">
+	<visual>
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<geometry>
+			<mesh filename="package://motoman_sda10f_support/models/cell/meshes/visual_model_cell.stl"/>
+		</geometry>
+		<material name="Grey">
+			<color rgba="0.6 0.6 0.6 1.0"/>
+		</material>
+	</visual>
+	<collision>
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<geometry> 
+			<mesh filename="package://motoman_sda10f_support/models/cell/meshes/collision_model_cell.stl"/>
+		</geometry>
+	</collision>
+     </link>
+
+     <joint name="cell-base_link2-fixed" type="fixed">
+        <parent link="${prefix}base_link"/>
+        <child link="cell"/>
+	<origin xyz="-0.86118 1.140 1.893" rpy="0 0 0"/> <!-- -0.08 0 -0.115 -->
+     </joint>
+    <!-- End of additional lines2-->
+  </xacro:macro>
+
+  <!-- The following xacro is kept for backwards compatibility, it should not be used -->
+  <!-- see: https://github.com/ros-industrial/motoman/issues/166 -->
+  <xacro:macro name="sda10f">
+    <xacro:motoman_sda10f prefix=""/>
+  </xacro:macro>
+
+  <!--Aditional lines-->
+  <!--link name="robot_world" />
+
+  <joint name="robot_world_joint" type="fixed">
+    <parent link="robot_world" />
+    <child link="base_link"/>
+    <origin xyz="$(arg x) $(arg y) $(arg z)" rpy="$(arg X) $(arg Y) $(arg Z)" />
+  </joint>
+  < End of additional lines-->
+
+</robot>

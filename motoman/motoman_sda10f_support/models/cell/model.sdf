@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+	<model name="cell">
+		<static>true</static>
+		<link name="cell_link">
+			<collision name="cell_collision">
+				<geometry>
+					<mesh>
+						<!--<uri>model://cell/meshes/collision_cage.dae</uri>-->
+						<uri>model://cell/meshes/collision_model_new.dae</uri>
+					</mesh>
+				</geometry>
+			</collision>
+
+			<visual name="cell_mesh">
+				<cast_shadows>true</cast_shadows>
+				<geometry>
+					<mesh>
+						<uri>model://cell/meshes/visual_cage.dae</uri>
+					</mesh>
+				</geometry>
+			</visual>
+		</link>
+	</model>
+</sdf>

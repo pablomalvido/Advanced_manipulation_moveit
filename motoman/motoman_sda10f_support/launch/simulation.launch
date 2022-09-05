@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<launch>
+
+   <arg name="limited" default="true"/>
+   <arg name="paused" default="true"/>
+   <arg name="gui" default="true"/>
+   <arg name="scene_file" default="$(find motoman_sda10f_support)/models/scene/cell.scene"/> 
+
+   <arg name="robot_x" default="0.14"/>   
+   <!--arg name="robot_y" default="0.0"/-->
+   <arg name="robot_z" default="0.115"/>  
+   <!--arg name="right_tool" default='p2p_camera'/-->
+   <!--arg name="left_tool" default='p2p'/-->
+   
+   <arg name="rviz" value="true"/>
+
+<!-- SIMULATION -->
+
+   <env name="GAZEBO_MODEL_PATH" value="$(find motoman_sda10f_support)/models/"/>
+
+   <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="paused"   value="$(arg paused)"/>
+      <arg name="gui"      value="$(arg gui)"/>
+   </include>
+
+   <node name="spawn_gazebo_Cel"     pkg="gazebo_ros" type="spawn_model" 
+      args=" -sdf 
+         -file $(find motoman_sda10f_support)/models/cell/model.sdf 
+         -model Table -x 0.0 -y 0.0 -z -0.0"
+      respawn="false" 
+      output="screen" />
+
+   <!--group ns="$(arg left_ns)"-->
+   
+      <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find motoman_sda10f_support)/urdf/sda10f.xacro'" />
+      
+      <node name="spawn_gazebo_robot" pkg="gazebo_ros" type="spawn_model" 
+         args="-urdf -param /robot_description 
+            -model sda10f" 
+         respawn="false" 
+         output="screen" 
+      />
+
+      <!--include file="$(find move_rt)/launch/controller_utils.launch">
+         <arg name="tf_prefix" value="$(arg left_ns)"/>
+      </include-->
+
+      <node pkg="tf" type="static_transform_publisher" name="robot_broadcaster" 
+         args="0 0 0 0 0 0 world robot_world 100" />
+      <include file="$(find motoman_sda10f_moveit_config)/launch/moveit_planning_execution.launch"/> 
+   <!--/group-->
+
+   <node name = "moveit_publish_scene_from_text" pkg= "moveit_ros_planning" type = "moveit_publish_scene_from_text" 
+      args= "$(arg scene_file)"
+   />
+
+   <!--rosparam file="$(find move_rt)/traj/waypoints_test.yaml" command="load"/-->   
+
+   <group if="$(arg rviz)">
+      <!--arg name="rvizconfig" default="$(find uc1_description)/rviz/uc1_simulation.rviz" /-->
+      <node name="rviz" pkg="rviz" type="rviz" required="true"/>
+   </group>
+
+
+</launch>

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="Capture_angular_speed" pkg="advanced_manipulation_pkg" type="capture_angles.py" output="screen">
+    </node>
+</launch>  

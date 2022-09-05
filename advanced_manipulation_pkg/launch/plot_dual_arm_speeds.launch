@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="Capture_speed_dual" pkg="advanced_manipulation_pkg" type="capture_dual_speeds.py" output="screen">
+    </node>
+</launch>  

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="moveit_extension" pkg="advanced_manipulation_pkg" type="advanced_manipulation.py" output="screen">
+    </node>
+</launch>  
