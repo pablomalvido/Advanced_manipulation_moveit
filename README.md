@@ -2,6 +2,8 @@
 
 The advanced\_manipulation\_pkg presents a set of functions that extend the current MoveIt capabilities, to perform advanced manipulation. This functions include: Automatic tool changing, single and dual-arm motion with full control on the EEF cartesian speed and acceleration, and several types of dual-arm synchronized movements.
 
+These functions are presented in the following research article: *Malvido Fresnillo, P., Vasudevan, S., Mohammed, W. M., Martinez Lastra, J. L., & Perez Garcia, J. A. (2023). Extending the motion planning framework—MoveIt with advanced manipulation functions for industrial applications. Rob. Comput. Integr. Manuf., 83, 102559. doi: 10.1016/j.rcim.2023.102559* (https://www.sciencedirect.com/science/article/pii/S0736584523000352).
+
 # Required modifications
 
 The functions are very generic, but a few modifications are required in order to use the code with any robot.
